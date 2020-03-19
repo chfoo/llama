@@ -45,7 +45,7 @@ Llama is intended to be a modern alternative to the [msgpack-haxe](https://githu
 
 Requires Haxe 4.0+
 
-Install it using haxelib:
+~~Install it using haxelib:~~ (Not yet released)
 
         haxelib install llama
 
@@ -81,12 +81,14 @@ encoder.encode("hello world!");
 final myData = output.getBytes();
 ```
 
-If you have any custom types, you can provide a custom encoder callback:
+If you have any objects that need to be serialized manually, you can provide a custom encoder callback:
 
 ```haxe
 encoder.customEncoder = (encoder, object) -> {
     if (Std.is(object, MyCustomClass)) {
         encoder.encodeString(object.toString());
+    } else {
+        throw 'Unsupported object $object';
     }
 };
 ```
@@ -146,7 +148,7 @@ To convert any extensions, you can provide a extension handler callback:
 decoder.extensionDecoder = (decoder, extension) {
     switch extension.extensionType()
         case 123:
-            return MyCustomType(extension.extensionData());
+            return new MyCustomType(extension.extensionData());
         default:
             return extension;
     }
