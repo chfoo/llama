@@ -1,0 +1,3 @@
+[submodule "lib/msgpack-test-suite"]
+	path = lib/msgpack-test-suite
+	url = https://github.com/kawanet/msgpack-test-suite

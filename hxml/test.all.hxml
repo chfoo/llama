@@ -1,0 +1,31 @@
+test.hxml
+
+--each
+--js out/js/test.js
+
+--next
+--lua out/lua/test.lua
+
+--next
+--swf out/swf/test.swf
+
+--next
+--neko out/neko/test.n
+
+--next
+--php out/php/
+
+--next
+--cpp out/cpp/
+
+--next
+--cs out/cs/
+
+--next
+--java out/java/
+
+--next
+--python out/python/test.py
+
+--next
+--hl out/hl/test.hl

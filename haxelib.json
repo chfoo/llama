@@ -1,0 +1,13 @@
+{
+    "name": "llama",
+    "url" : "https://github.com/chfoo/llama/",
+    "license": "MIT",
+    "tags": ["cross", "serialization", "msgpack"],
+    "description": "MessagePack encoder and decoder library",
+    "version": "0.1.0",
+    "classPath": "src/",
+    "releasenote": "First release",
+    "contributors": ["chfoo"],
+    "dependencies": {
+    }
+}

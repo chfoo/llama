@@ -1,0 +1,7 @@
+-cp src/
+-cp test/
+-lib utest
+-main llama.TestAll
+-debug
+--macro nullSafety("llama", Loose)
+--resource lib/msgpack-test-suite/dist/msgpack-test-suite.json@test_data.json

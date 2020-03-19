@@ -1,0 +1,2 @@
+test.hxml
+--lua out/lua/test.lua
