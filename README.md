@@ -31,15 +31,17 @@ Llama is intended to be a modern alternative to the [msgpack-haxe](https://githu
 | Target | Supported? |
 |--------|------------|
 | JS | Yes |
-| Lua | No. Error loading tests. |
-| SWF | No. Cast error. |
+| Lua | Yes |
+| Flash (SWF) | Yes |
 | Neko | No. 31-bit integer limitation. |
 | PHP | Yes |
 | C++ (CPP) | Yes |
-| C# (CS) | No. Cast error. |
+| C# (CS) | Yes* |
 | Java | Yes |
 | Python | Yes |
 | HashLink (HL) | Yes |
+
+* On C#, only maps with `IMap<Any,Any>`, `IMap<String,Any>`, `IMap<Int,Any>`, and anonymous structures are supported.
 
 ## Getting started
 

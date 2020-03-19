@@ -22,8 +22,6 @@ class Decoder {
      */
     public function new(input:Input) {
         this.input = input;
-        this.extensionDecoder = extensionDecoder;
-        this.customDecoder = customDecoder;
         input.bigEndian = true;
     }
 
@@ -46,7 +44,7 @@ class Decoder {
      * The default map is `AssociativeArray`.
      */
     public dynamic function mapFactory():MapType {
-        return new AssociativeArray();
+        return new AssociativeArray<Any,Any>();
     }
 
     /**
@@ -160,7 +158,7 @@ class Decoder {
     }
 
     #if (!llama_no_inline) inline #end
-    public function decodeFixmap(value:Int):IMap<Any,Any> {
+    public function decodeFixmap(value:Int):Any {
         final mapSize = value - 0x80;
         return decodeMap(mapSize);
     }
@@ -195,6 +193,9 @@ class Decoder {
         final mapType = mapFactory();
 
         if (Std.is(mapType, IMap)) {
+            #if (cs || llama_checked_map_cast)
+            checkedDecodeMap(mapSize, mapType);
+            #else
             final map:IMap<Any,Any> = mapType;
 
             for (index in 0...mapSize) {
@@ -202,6 +203,7 @@ class Decoder {
                 final value = decode();
                 map.set(key, value);
             }
+            #end
         } else {
             final anonStruct:DynamicAccess<Any> = cast mapType;
             for (index in 0...mapSize) {
@@ -212,6 +214,46 @@ class Decoder {
         }
 
         return mapType;
+    }
+
+    function checkedDecodeMap(mapSize:Int, mapType:Any) {
+        var map:IMap<Any,Any>;
+
+        try {
+            map = mapType;
+        } catch (exception:Any) {
+            var stringMap:IMap<String,Any>;
+
+            try {
+                stringMap = mapType;
+            } catch (exception:Any) {
+                var intMap:IMap<Int,Any>;
+
+                intMap = mapType;
+
+                for (index in 0...mapSize) {
+                    final key = decode();
+                    final value = decode();
+                    intMap.set(key, value);
+                }
+
+                return;
+            }
+
+            for (index in 0...mapSize) {
+                final key = decode();
+                final value = decode();
+                stringMap.set(key, value);
+            }
+
+            return;
+        }
+
+        for (index in 0...mapSize) {
+            final key = decode();
+            final value = decode();
+            map.set(key, value);
+        }
     }
 
     #if (!llama_no_inline) inline #end

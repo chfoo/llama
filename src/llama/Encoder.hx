@@ -61,7 +61,12 @@ class Encoder {
             case TExtension:
                 final extension:Extension = cast value;
                 encodeExtension(extension.extensionType(), extension.extensionData());
-            case TMap: encodeMap(value);
+            case TMap:
+                #if (cs || llama_checked_map_cast)
+                checkedMapEncode(value);
+                #else
+                encodeMap(value);
+                #end
             case TString: encodeString(value);
             case TBytes: encodeBytes(value);
             case TArray: encodeArray(value);
@@ -229,6 +234,60 @@ class Encoder {
         }
 
         encodeMapArrays(keys, values);
+    }
+
+    function checkedMapEncode(mapType:Any) {
+        var map:IMap<Any,Any>;
+
+        try {
+            map = mapType;
+        } catch (exception:Any) {
+            var stringMap:IMap<String,Any>;
+
+            try {
+                stringMap = mapType;
+            } catch (exception:Any) {
+                var intMap:IMap<Int,Any>;
+
+                intMap = mapType;
+
+                final keys:Array<Int> = [];
+                final values:Array<Any> = [];
+
+                for (key => value in intMap) {
+                    keys.push(key);
+                    values.push(value);
+                }
+
+                encodeMapArrays(keys, values);
+
+                return;
+            }
+
+            final keys:Array<String> = [];
+            final values:Array<Any> = [];
+
+            for (key => value in stringMap) {
+                keys.push(key);
+                values.push(value);
+            }
+
+            encodeMapArrays(keys, values);
+
+
+            return;
+        }
+
+        final keys:Array<Any> = [];
+        final values:Array<Any> = [];
+
+        for (key => value in map) {
+            keys.push(key);
+            values.push(value);
+        }
+
+        encodeMapArrays(keys, values);
+
     }
 
     public function encodeMapArrays<K,V>(keys:Array<K>, values:Array<V>) {

@@ -40,7 +40,12 @@ private class ExtensionImpl implements Extension {
 
 @:nullSafety(Off)
 class TestData {
-    static final data:DynamicAccess<DocSection> = Json.parse(Resource.getString("test_data.json"));
+    static final data:DynamicAccess<DocSection> =
+        #if lua
+        Json.parse(sys.io.File.getContent("lib/msgpack-test-suite/dist/msgpack-test-suite.json"));
+        #else
+        Json.parse(Resource.getString("test_data.json"));
+        #end
     public static final testItems:Array<TestDataItem> = processTestItems();
 
     static function processTestItems():Array<TestDataItem> {
