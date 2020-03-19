@@ -8,23 +8,27 @@ import haxe.io.Encoding;
 import haxe.io.Input;
 import llama.util.MapType;
 
-typedef MapFactory = Void->MapType;
-
 /**
  * MsgPack format decoder.
  */
 class Decoder {
-    public var input:Input;
+    /**
+     * Current Input instance.
+     */
+    public var input(default, null):Input;
 
     /**
-     * @param input Encoded MsgPack data to be decoded. Property
-     *     `bigEndian` will be set true.
+     * @param input Encoded MsgPack data to be decoded.
+     * Property `bigEndian` will be set true.
      */
     public function new(input:Input) {
         this.input = input;
         input.bigEndian = true;
     }
 
+    /**
+     * Reset the decoder for reuse.
+     */
     public function reset(input:Input) {
         this.input = input;
         input.bigEndian = true;
@@ -55,6 +59,9 @@ class Decoder {
         throw 'format $formatByte not supported';
     }
 
+    /**
+     * Recursive decode and return the object.
+     */
     public function decode():Any {
          // the individual decoder functions are based on msgpack-javascript
 

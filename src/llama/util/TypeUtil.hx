@@ -4,7 +4,13 @@ import haxe.io.Bytes;
 import haxe.Constraints.IMap;
 import haxe.Int64;
 
+/**
+ * Runtime type utility.
+ */
 class TypeUtil {
+    /**
+     * Returns the runtime type of the object for encoding.
+     */
     @:nullSafety(Off)
     public static function typeOf(value:Null<Any>):EncoderDataType {
         switch Type.typeof(value) {

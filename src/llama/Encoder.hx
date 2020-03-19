@@ -13,7 +13,10 @@ import llama.util.TypeUtil;
  * MsgPack format encoder.
  */
 class Encoder {
-    public var output:Output;
+    /**
+     * Current output instance.
+     */
+    public var output(default, null):Output;
 
     /**
      * Whether to check if Float can fit within 32-bits.
@@ -24,14 +27,17 @@ class Encoder {
     public var compactFloat:Bool = true;
 
     /**
-     * @param output Instance to write the encoded MsgPack data. Property
-     *     `bigEndian` will be set true.
+     * @param output Instance to write the encoded MsgPack data.
+     * Property `bigEndian` will be set true.
      */
     public function new(output:Output) {
         this.output = output;
         output.bigEndian = true;
     }
 
+    /**
+     * Reset the encoder for reuse.
+     */
     public function reset(output:Output) {
         this.output = output;
         output.bigEndian = true;

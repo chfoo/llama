@@ -1,5 +1,6 @@
 package llama.test;
 
+import llama.util.MapType;
 import haxe.Constraints.IMap;
 import haxe.ds.IntMap;
 import haxe.ds.StringMap;
@@ -31,7 +32,7 @@ class TestDecoder extends Test {
         }
     }
 
-    function stringIntMapDecode(?mapFactory:Decoder.MapFactory):Any {
+    function stringIntMapDecode(?mapFactory:Void->MapType):Any {
         final bytes = Bytes.ofHex(STRING_INT_MAP);
         final decoder = new Decoder(new BytesInput(bytes));
 
@@ -52,7 +53,7 @@ class TestDecoder extends Test {
         Assert.equals(1, map.get("a"));
     }
 
-    function intStringMapDecode(?mapFactory:Decoder.MapFactory):Any {
+    function intStringMapDecode(?mapFactory:Void->MapType):Any {
         final bytes = Bytes.ofHex(INT_STRING_MAP);
         final decoder = new Decoder(new BytesInput(bytes));
 

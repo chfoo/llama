@@ -1,5 +1,8 @@
 package llama;
 
+/**
+ * Fix-N format first byte.
+ */
 enum abstract VariableFormatByte(Int) from Int to Int {
     var PositiveFixint = 0x00;
     var Fixmap = 0x80;

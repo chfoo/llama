@@ -157,6 +157,10 @@ decoder.extensionDecoder = (decoder, extension) {
 };
 ```
 
+### Further reading
+
+API docs: https://chfoo.github.io/llama/api/
+
 ## Contributing
 
 If you have any issues or fixes, please file a issue or pull request.

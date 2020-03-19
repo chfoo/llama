@@ -1,5 +1,8 @@
 package llama.util;
 
+/**
+ * Encoder object data type.
+ */
 enum EncoderDataType {
     TNull;
     TInt;

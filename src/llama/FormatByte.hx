@@ -1,5 +1,8 @@
 package llama;
 
+/**
+ * Format first byte.
+ */
 enum abstract FormatByte(Int) from Int to Int {
     var Nil = 0xc0;
     var NeverUsed = 0xc1;
