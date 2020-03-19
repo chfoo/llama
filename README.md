@@ -47,7 +47,7 @@ Llama is intended to be a modern alternative to the [msgpack-haxe](https://githu
 
 Requires Haxe 4.0+
 
-~~Install it using haxelib:~~ (Not yet released)
+Install it using haxelib:
 
         haxelib install llama
 
