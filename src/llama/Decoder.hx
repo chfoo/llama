@@ -275,9 +275,10 @@ class Decoder {
         }
 
         final array:Array<Any> = [];
+        array.resize(arrayLength);
 
         for (index in 0...arrayLength) {
-            array.push(decode());
+            array[index] = decode();
         }
 
         return array;
