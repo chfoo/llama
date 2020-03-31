@@ -275,7 +275,7 @@ class Decoder {
         }
 
         final array:Array<Any> = [];
-        array.resize(arrayLength);
+        @:nullSafety(Off) array.resize(arrayLength);
 
         for (index in 0...arrayLength) {
             array[index] = decode();
