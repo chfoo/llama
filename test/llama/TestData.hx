@@ -119,7 +119,7 @@ class TestData {
         } else if (item.exists("ext")) {
             return getValueByType(item, "ext");
         } else {
-            throw "unknown type";
+            throw new haxe.Exception("unknown type");
         }
     }
 
@@ -156,7 +156,7 @@ class TestData {
                 final array:Array<Any> = item.get("ext");
                 return new ExtensionImpl(array[0], parseEscapedBinary(array[1]));
             default:
-                throw "unknown type";
+                throw new haxe.Exception("unknown type");
         }
     }
 }

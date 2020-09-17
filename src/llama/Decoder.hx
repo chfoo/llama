@@ -1,5 +1,7 @@
 package llama;
 
+import llama.Exception.DecodeError;
+import haxe.Exception;
 import haxe.Constraints.IMap;
 import haxe.DynamicAccess;
 import haxe.Int64;
@@ -16,6 +18,36 @@ class Decoder {
      * Current Input instance.
      */
     public var input(default, null):Input;
+
+    /**
+     * Maximum number of keys in a map.
+     *
+     * If the decoder encounters a size too big, it will throw `DecodeError`.
+     */
+    public var maxMapSize:Int = 2147483647;
+
+    /**
+     * Maximum number of elements in an array.
+     *
+     * If the decoder encounters a size too big, it will throw `DecodeError`.
+     */
+    public var maxArrayLength:Int = 2147483647;
+
+    /**
+     * Maximum length of `Bytes` object.
+     *
+     * If the decoder encounters a size too big, it will throw `DecodeError`.
+     */
+    public var maxBytesLength:Int = 2147483647;
+
+    /**
+     * Maximum recursive depth of the decoder.
+     *
+     * If the decoder recurses beyond the specified depth, it will throw `DecodeError`.
+     */
+    public var maxRecursionDepth = 2147483647;
+
+    var currentRecursionDepth = 0;
 
     /**
      * @param input Encoded MsgPack data to be decoded.
@@ -56,7 +88,7 @@ class Decoder {
      * format byte.
      */
     public dynamic function customDecoder(decoder:Decoder, formatByte:Int):Any {
-        throw 'format $formatByte not supported';
+        throw new Exception.DecodeError('format $formatByte not supported');
     }
 
     /**
@@ -64,6 +96,12 @@ class Decoder {
      */
     public function decode():Any {
          // the individual decoder functions are based on msgpack-javascript
+
+        currentRecursionDepth += 1;
+
+        if (currentRecursionDepth >= maxRecursionDepth) {
+            throw new Exception.DecodeError("maximum recursion depth");
+        }
 
         final formatByte = input.readByte();
         var object:Null<Any>;
@@ -145,11 +183,13 @@ class Decoder {
                 case Ext32:
                     object = processExtension(decodeExt(input.readInt32()));
                 case NeverUsed:
-                    throw "found never used byte";
+                    throw new Exception.DecodeError("found never used byte");
                 default:
                     object = customDecoder(this, formatByte);
             }
         }
+
+        currentRecursionDepth -= 1;
 
         return object;
     }
@@ -193,8 +233,8 @@ class Decoder {
     }
 
     public function decodeMap(mapSize:Int):Any {
-        if (mapSize < 0) {
-            throw "map size too big";
+        if (mapSize < 0 || mapSize > maxMapSize) {
+            throw new Exception.DecodeError("map size too big");
         }
 
         final mapType = mapFactory();
@@ -270,8 +310,8 @@ class Decoder {
     }
 
     public function decodeArray(arrayLength:Int):Array<Any> {
-        if (arrayLength < 0) {
-            throw "array length too big";
+        if (arrayLength < 0 || arrayLength > maxArrayLength) {
+            throw new Exception.DecodeError("array length too big");
         }
 
         final array:Array<Any> = [];
@@ -292,8 +332,8 @@ class Decoder {
 
     #if (!llama_no_inline) inline #end
     public function decodeString(byteLength:Int):String {
-        if (byteLength < 0) {
-            throw "byte length too big";
+        if (byteLength < 0 || byteLength > maxBytesLength) {
+            throw new Exception.DecodeError("byte length too big");
         }
 
         return input.readString(byteLength, Encoding.UTF8);
@@ -301,8 +341,8 @@ class Decoder {
 
     #if (!llama_no_inline) inline #end
     public function decodeBin(byteLength:Int):Bytes {
-        if (byteLength < 0) {
-            throw "byte length too big";
+        if (byteLength < 0 || byteLength > maxBytesLength) {
+            throw new Exception.DecodeError("byte length too big");
         }
 
         return input.read(byteLength);
@@ -310,8 +350,8 @@ class Decoder {
 
     #if (!llama_no_inline) inline #end
     public function decodeExt(byteLength:Int):Extension {
-        if (byteLength < 0) {
-            throw "byte length too big";
+        if (byteLength < 0 || byteLength > maxBytesLength) {
+            throw new Exception.DecodeError("byte length too big");
         }
 
         return new ExtensionImpl(

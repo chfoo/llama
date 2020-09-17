@@ -105,4 +105,40 @@ class TestDecoder extends Test {
         final result = intStringMapDecode(() -> new IntMap<Any>());
         validateDecodedIntStringMap_IntAny(result);
     }
+
+    public function testTooBigMap() {
+        final bytes = Bytes.ofHex("DF00000065"); // map with size 101
+        final decoder = new Decoder(new BytesInput(bytes));
+        decoder.maxMapSize = 100;
+        Assert.raises(decoder.decode, Exception.DecodeError);
+    }
+
+    public function testTooBigArray() {
+        final bytes = Bytes.ofHex("DD00000065"); // array with size 101
+        final decoder = new Decoder(new BytesInput(bytes));
+        decoder.maxArrayLength = 100;
+        Assert.raises(decoder.decode, Exception.DecodeError);
+    }
+
+    public function testTooBigBytes() {
+        final items = [
+            "C600000065", // bin with size 101
+            "DB00000065", // str
+            "C900000065", // ext
+        ];
+
+        for (item in items) {
+            final bytes = Bytes.ofHex(item);
+            final decoder = new Decoder(new BytesInput(bytes));
+            decoder.maxBytesLength = 100;
+            Assert.raises(decoder.decode, Exception.DecodeError);
+        }
+    }
+
+    public function testRecursionLimit() {
+        final bytes = Bytes.ofHex("9F9F9F9F9F9F9F9F9F9F9F9F9F9F9F9F9F9F9F9F9F9F"); // fix array 15
+        final decoder = new Decoder(new BytesInput(bytes));
+        decoder.maxRecursionDepth = 5;
+        Assert.raises(decoder.decode, Exception.DecodeError);
+    }
 }

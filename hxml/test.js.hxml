@@ -1,2 +1,3 @@
 test.hxml
 --js out/js/test.js
+-D js-es=6

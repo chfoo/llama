@@ -48,7 +48,7 @@ class Encoder {
      * the encoder itself.
      */
     public dynamic function customEncoder(encoder:Encoder, object:Any) {
-        throw 'Unsupported value $object for encoding.';
+        throw new Exception.EncodeError('Unsupported value $object for encoding.');
     }
 
     /**

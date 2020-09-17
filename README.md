@@ -157,6 +157,8 @@ decoder.extensionDecoder = (decoder, extension) {
 };
 ```
 
+When parsing untrusted input, the decoder will accept any size and may crash. To avoid this, set the `maxMapSize`, `maxArrayLength`, `maxBytesLength`, and `maxRecursionDepth` fields on `decoder`.
+
 ### Further reading
 
 API docs: https://chfoo.github.io/llama/api/
