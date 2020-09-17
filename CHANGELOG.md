@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.1.0 (2020-09-17)
 
 * Changed: Minimum Haxe version is now 4.1.
 * Fixed: `Std.is()` and `Int64.is()` deprecation warnings
