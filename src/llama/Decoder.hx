@@ -199,7 +199,7 @@ class Decoder {
 
         final mapType = mapFactory();
 
-        if (Std.is(mapType, IMap)) {
+        if (Std.isOfType(mapType, IMap)) {
             #if (cs || llama_checked_map_cast)
             checkedDecodeMap(mapSize, mapType);
             #else

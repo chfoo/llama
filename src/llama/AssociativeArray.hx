@@ -102,11 +102,11 @@ class AssociativeArray<K,V> implements IMap<K,V> {
     }
 
     function indexOf(k:K):Int {
-        if (Int64.is(k)) {
+        if (Int64.isInt64(k)) {
             final keyI64:Int64 = cast k;
 
             for (index in 0...arrayKeys.length) {
-                if (Int64.is(arrayKeys[index]) && Int64.eq(keyI64, cast arrayKeys[index])) {
+                if (Int64.isInt64(arrayKeys[index]) && Int64.eq(keyI64, cast arrayKeys[index])) {
                     return index;
                 }
             }

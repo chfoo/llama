@@ -21,7 +21,7 @@ class TypeUtil {
             // targets with integer support (exclude java which Type.typeof does not work on Int64)
             #if (cpp || cs || neko || flash || hl || llama_has_int)
             case TInt:
-                if (Int64.is(value) && !isIntegerAInt32(value)) {
+                if (Int64.isInt64(value) && !isIntegerAInt32(value)) {
                     return TInt64;
                 } else {
                     return TInt;
@@ -31,17 +31,17 @@ class TypeUtil {
             #end
 
             case TClass(c):
-                if (Int64.is(value)) {
+                if (Int64.isInt64(value)) {
                     return TInt64;
-                } else if (Std.is(value, Extension)) {
+                } else if (Std.isOfType(value, Extension)) {
                     return TExtension;
-                } else if (Std.is(value, IMap)) {
+                } else if (Std.isOfType(value, IMap)) {
                     return TMap;
-                } else if (Std.is(value, String)) {
+                } else if (Std.isOfType(value, String)) {
                     return TString;
-                } else if (Std.is(value, Bytes)) {
+                } else if (Std.isOfType(value, Bytes)) {
                     return TBytes;
-                } else if (Std.is(value, Array)) {
+                } else if (Std.isOfType(value, Array)) {
                     return TArray;
                 } else {
                     return TUnknown;
@@ -49,16 +49,16 @@ class TypeUtil {
 
             default:
                 #if java
-                if (Int64.is(value)) {
+                if (Int64.isInt64(value)) {
                     return TInt64;
-                } else if (Std.is(value, Int)) {
+                } else if (Std.isOfType(value, Int)) {
                     return TInt;
-                } else if (Std.is(value, Float)) {
+                } else if (Std.isOfType(value, Float)) {
                     return TFloat;
                 }
                 #else
 
-                if (Std.is(value, Float) || Std.is(value, Int)) {
+                if (Std.isOfType(value, Float) || Std.isOfType(value, Int)) {
                     if (isNumberAInt32(value)) {
                         return TInt;
                     } else {
